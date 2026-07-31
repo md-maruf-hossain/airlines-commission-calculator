@@ -24,8 +24,8 @@
   };
 
   const defaults = {
-    baseFare: 8848.00,
-    totalTaxes: 2350.00,
+    baseFare: 50000.00,
+    totalTaxes: 15000.00,
     bspDiscount: 7,
     aitPercent: 0.3,
     serviceCharge: 0.00
