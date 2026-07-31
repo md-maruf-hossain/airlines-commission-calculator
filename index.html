@@ -4,12 +4,154 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Fare Discount Calculator</title>
+<script>
+  (function(){
+    document.documentElement.setAttribute('data-theme', 'light');
+  })();
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+<div class="app">
+
+  <div class="app-header">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="4" y="2.5" width="16" height="19" rx="2.5" stroke="#FFB020" stroke-width="1.8"/>
+          <rect x="6.75" y="5.2" width="10.5" height="4" rx="0.8" fill="#FFB020"/>
+          <circle cx="7.4" cy="12.4" r="1.05" fill="#FFB020"/>
+          <circle cx="12" cy="12.4" r="1.05" fill="#FFB020"/>
+          <circle cx="16.6" cy="12.4" r="1.05" fill="#FFB020"/>
+          <circle cx="7.4" cy="16.4" r="1.05" fill="#FFB020"/>
+          <circle cx="12" cy="16.4" r="1.05" fill="#FFB020"/>
+          <circle cx="16.6" cy="16.4" r="1.05" fill="#FFB020"/>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <h1>Fare Discount Calculator</h1>
+        <p>BSP net charge, calculated instantly</p>
+      </div>
+    </div>
+    <div class="header-right">
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" title="Toggle dark / light mode">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="12" cy="12" r="4.5" stroke="currentColor" stroke-width="1.8"/>
+          <path d="M12 2.5V4.5M12 19.5V21.5M4.5 12H2.5M21.5 12H19.5M5.6 5.6L4.2 4.2M19.8 19.8L18.4 18.4M18.4 5.6L19.8 4.2M4.2 19.8L5.6 18.4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a6.8 6.8 0 0 0 10.5 10.5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="ticket">
+
+    <!-- LEFT: INPUT STUB -->
+    <div class="stub">
+      <div class="stub-label">Fare inputs</div>
+
+      <div class="field">
+        <label for="baseFare">Base Fare <span class="unit">BDT</span></label>
+        <div class="input-wrap">
+          <span class="prefix">৳</span>
+          <input type="number" id="baseFare" value="50000.00" step="0.01" inputmode="decimal">
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="totalTaxes">Total Taxes <span class="unit">BDT</span></label>
+        <div class="input-wrap">
+          <span class="prefix">৳</span>
+          <input type="number" id="totalTaxes" value="15000.00" step="0.01" inputmode="decimal">
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="bspDiscount">BSP Discount <span class="unit">% of base fare</span></label>
+        <div class="input-wrap percent">
+          <input type="number" id="bspDiscount" value="7" step="0.01" inputmode="decimal">
+          <span class="suffix">%</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="aitPercent">AIT on Total Amount <span class="unit">% of airfare</span></label>
+        <div class="input-wrap percent">
+          <input type="number" id="aitPercent" value="0.3" step="0.01" inputmode="decimal">
+          <span class="suffix">%</span>
+        </div>
+      </div>
+
+      <div class="divider-note">optional</div>
+
+      <div class="field" style="margin-bottom:24px;">
+        <label for="serviceCharge">Service Charge <span class="unit">BDT</span></label>
+        <div class="input-wrap">
+          <span class="prefix">৳</span>
+          <input type="number" id="serviceCharge" value="200.00" step="0.01" inputmode="decimal">
+        </div>
+      </div>
+
+      <button class="reset-btn" id="resetBtn">Reset to defaults</button>
+    </div>
+
+    <div class="perforation">
+      <div class="hole"></div>
+      <div class="dashes"></div>
+      <div class="hole"></div>
+    </div>
+
+    <!-- RIGHT: RESULTS BOARD -->
+    <div class="board">
+      <div class="board-label"><span><span class="dot"></span>Live calculation</span><span>BDT</span></div>
+
+      <div class="row">
+        <span class="r-label">Base Fare</span>
+        <span class="r-value" id="outBaseFare">0.00</span>
+      </div>
+      <div class="row">
+        <span class="r-label">Total Taxes</span>
+        <span class="r-value" id="outTotalTaxes">0.00</span>
+      </div>
+      <div class="row total">
+        <span class="r-label">Total Airfare</span>
+        <span class="r-value" id="outTotalAirfare">0.00</span>
+      </div>
+      <div class="row subtract">
+        <span class="r-label">BSP Discount (<span id="outBspPct">0</span>%)</span>
+        <span class="r-value" id="outBspAmount">0.00</span>
+      </div>
+      <div class="row">
+        <span class="r-label">Air Fare after BSP Discount</span>
+        <span class="r-value" id="outAfterBsp">0.00</span>
+      </div>
+      <div class="row add">
+        <span class="r-label">AIT (<span id="outAitPct">0</span>%)</span>
+        <span class="r-value" id="outAitAmount">0.00</span>
+      </div>
+      <div class="row add">
+        <span class="r-label">Service Charge</span>
+        <span class="r-value" id="outServiceCharge">৳0.00</span>
+      </div>
+
+      <div class="net-panel">
+        <div class="net-title">Net Charge Amount</div>
+        <div class="net-value"><span class="cur">BDT</span><span id="netCharge">0.00</span></div>
+        <div class="net-sub">Air Fare after BSP + AIT + Service Charge</div>
+      </div>
+    </div>
+
+  </div>
+
+  <p class="footer-note">Figures follow standard BSP fare calculation logic &middot; adjust any field to recalculate</p>
+
+</div>
 
 <script src="script.js"></script>
 </body>
